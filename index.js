@@ -36,15 +36,41 @@ let lastId = 3;
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-//CHALLENGE 1: GET All posts
+app.get('/posts', (req, res) => {
+  res.send(posts);
+})
 
 //CHALLENGE 2: GET a specific post by id
 
 //CHALLENGE 3: POST a new post
 
+app.post('/posts', (req, res) => {
+  const response = req.body;
+  const newPost = {
+    id: posts.length + 1,
+    title: response.title,
+    content: response.content,
+    author: response.author,
+    date: new Date().getDate(),
+  }
+  posts.push(newPost);
+  res.send(newPost);
+})
+
 //CHALLENGE 4: PATCH a post when you just want to update one parameter
 
 //CHALLENGE 5: DELETE a specific post by providing the post id.
+
+app.delete('/posts/:id', (req, res) => {
+  const id = parseInt(req.params.id);
+  const indexToDelete = posts.findIndex( (post) => post.id === id);
+  try {
+    posts.splice(indexToDelete, 1);
+    res.sendStatus(200);
+  } catch (error) {
+    console.error("Failed to delete post: ", error.message);
+  }
+})
 
 app.listen(port, () => {
   console.log(`API is running at http://localhost:${port}`);
