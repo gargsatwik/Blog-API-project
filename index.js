@@ -4,6 +4,18 @@ import bodyParser from "body-parser";
 const app = express();
 const port = 4000;
 
+function generateDate(){
+  const now = new Date();
+  const year = now.getFullYear();
+  const month = String(now.getMonth() + 1).padStart(2, '0');
+  const day = String(now.getDate()).padStart(2, '0');
+  const hours = String(now.getHours()).padStart(2, '0');
+  const minutes = String(now.getMinutes()).padStart(2, '0');
+  const seconds = String(now.getSeconds()).padStart(2, '0');
+  const formattedDateTime = `${year}-${month}-${day}T${hours}:${minutes}:${seconds}Z`;
+  return formattedDateTime;
+}
+
 let posts = [
   {
     id: 1,
@@ -40,9 +52,11 @@ app.get('/posts', (req, res) => {
   res.send(posts);
 })
 
-//CHALLENGE 2: GET a specific post by id
-
-//CHALLENGE 3: POST a new post
+app.get('/posts/:id', (req, res) => {
+  const id = parseInt(req.params.id);
+  const postIndex = posts.findIndex( (post) => post.id === id);
+  res.send(posts[postIndex]);
+})
 
 app.post('/posts', (req, res) => {
   const response = req.body;
@@ -51,15 +65,25 @@ app.post('/posts', (req, res) => {
     title: response.title,
     content: response.content,
     author: response.author,
-    date: new Date().getDate(),
+    date: generateDate(),
   }
   posts.push(newPost);
   res.send(newPost);
 })
 
-//CHALLENGE 4: PATCH a post when you just want to update one parameter
-
-//CHALLENGE 5: DELETE a specific post by providing the post id.
+app.patch('/posts/:id', (req, res) => {
+  const data = req.body;
+  const id = parseInt(req.params.id);
+  const postIndex = posts.findIndex( (post) => post.id === id);
+  const post = posts[postIndex];
+  if (data.title) {
+    post.title = data.title;
+  } else if (data.content) {
+    post.content = data.content;
+  }
+  post.date = generateDate();
+  res.send(posts[postIndex]);
+})
 
 app.delete('/posts/:id', (req, res) => {
   const id = parseInt(req.params.id);
