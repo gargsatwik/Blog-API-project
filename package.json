@@ -13,9 +13,9 @@
   "dependencies": {
     "axios": "^1.4.0",
     "body-parser": "^1.20.2",
+    "dotenv": "^16.4.5",
     "ejs": "^3.1.9",
     "express": "^4.18.2",
-    "mongodb": "^6.7.0",
-    "mongosh": "^2.2.6"
+    "mongoose": "^8.4.1"
   }
 }
